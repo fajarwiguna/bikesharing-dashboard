@@ -15,8 +15,6 @@
 ✔️ Interaktif & mudah digunakan  
 ✔️ Dibangun dengan **Python, Pandas, Seaborn, dan Matplotlib**  
 
-📌 **Demo Live:** [🚀 Lihat di Streamlit](#) *(Tambahkan URL jika sudah di-hosting)*  
-
 ---
 
 ## ✨ Features  
@@ -94,6 +92,6 @@ cnt → Jumlah total peminjaman
 Proyek ini menggunakan MIT License. Anda bebas menggunakannya dan memodifikasinya sesuai kebutuhan.
 
 📬 Feedback & Kontribusi
-💡 Punya ide atau saran? Silakan buat issue atau pull request di GitHub Repository. (Tambahkan link repo jika ada)
+💡 Punya ide atau saran? Silakan buat issue atau pull request di GitHub Repository. 
 
 🚀 Nikmati pengalaman eksplorasi data peminjaman sepeda! 📊🚴‍♂️
