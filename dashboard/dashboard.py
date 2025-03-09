@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 sns.set_theme(style="whitegrid")
 
+all_df = pd.read_csv("dashboard/all_data.csv")
 bikes_per_day_df = pd.read_csv("data/day.csv")
 bikes_per_hour_df = pd.read_csv("data/hour.csv")
 
