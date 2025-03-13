@@ -130,4 +130,3 @@ st.markdown("""
 """)
 
 st.success("🎉 Analisis selesai! Semoga bermanfaat dalam memahami tren peminjaman sepeda. 🚴‍♂️💨")
-
