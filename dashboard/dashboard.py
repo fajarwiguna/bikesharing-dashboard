@@ -30,6 +30,13 @@ col1.metric("Total Peminjaman", df_filtered["cnt_day"].sum())
 col2.metric("Peminjaman Harian Rata-rata", round(df_filtered["cnt_day"].mean(), 2))
 col3.metric("Peminjaman Maksimum dalam Sehari", df_filtered["cnt_day"].max())
 
+st.markdown("""
+📌 **Insight:**
+- 🚴 Total peminjaman sepeda sepanjang tahun ini mencapai **{} kali**.
+- 📊 Rata-rata peminjaman harian menunjukkan pola penggunaan reguler oleh masyarakat.
+- 🔥 Terdapat hari dengan lonjakan peminjaman tertinggi, bisa jadi karena **event khusus, cuaca bagus, atau hari libur**.
+""".format(df_filtered["cnt_day"].sum()))
+
 # 2️⃣ Tren Peminjaman Berdasarkan Bulan & Musim
 st.header("📅 Tren Peminjaman Sepeda")
 tab1, tab2 = st.tabs(["📆 Per Bulan", "🍂 Per Musim"])
@@ -46,6 +53,12 @@ with tab1:
     plt.title("Rata-rata Peminjaman Sepeda per Bulan")
     st.pyplot(plt)
 
+    st.markdown("""
+    📌 **Insight:**
+    - 📈 Peminjaman meningkat pada bulan tertentu, bisa jadi karena **cuaca yang lebih baik** atau **liburan**.
+    - 🔻 Jika ada bulan dengan peminjaman rendah, bisa dianalisis lebih lanjut penyebabnya.
+    """)
+
 with tab2:
     season_labels = {1: "Musim Semi", 2: "Musim Panas", 3: "Musim Gugur", 4: "Musim Dingin"}
     df_filtered["season_label"] = df_filtered["season_day"].map(season_labels)
@@ -57,6 +70,13 @@ with tab2:
     plt.ylabel("Jumlah Peminjaman")
     plt.title("Rata-rata Peminjaman Sepeda per Musim")
     st.pyplot(plt)
+
+    st.markdown("""
+    📌 **Insight:**
+    - ☀️ **Musim panas memiliki peminjaman tertinggi**, menunjukkan bahwa cuaca yang baik mendorong lebih banyak orang bersepeda.
+    - ❄️ **Musim dingin memiliki peminjaman terendah**, kemungkinan karena cuaca dingin dan salju membuat bersepeda kurang nyaman.
+    - 🚲 **Saran:** Penyedia layanan bisa meningkatkan jumlah sepeda saat musim panas dan mengurangi saat musim dingin untuk efisiensi.
+    """)
 
 # 3️⃣ Pengaruh Cuaca
 st.header("🌦️ Pengaruh Cuaca terhadap Peminjaman")
@@ -70,6 +90,13 @@ plt.ylabel("Rata-rata Peminjaman")
 plt.title("Dampak Cuaca terhadap Peminjaman Sepeda")
 st.pyplot(plt)
 
+st.markdown("""
+📌 **Insight:**
+- ☀️ Cuaca cerah berkontribusi pada peminjaman tertinggi, menunjukkan preferensi orang untuk bersepeda saat cuaca mendukung.
+- 🌧️ Peminjaman menurun saat hujan lebat, menandakan **kebutuhan alternatif transportasi di kondisi ekstrem**.
+- 🚲 **Saran:** Penyedia layanan bisa memberikan **diskon saat cuaca mendung** untuk mendorong penggunaan yang lebih stabil.
+""")
+
 # 4️⃣ Perbandingan Pengguna Kasual vs Terdaftar
 st.header("👥 Kasual vs Terdaftar")
 user_data = df_filtered[["casual_day", "registered_day"]].sum()
@@ -78,6 +105,12 @@ plt.figure(figsize=(6, 6))
 plt.pie(user_data, labels=["Kasual", "Terdaftar"], autopct="%1.1f%%", colors=["lightblue", "orange"])
 plt.title("Proporsi Pengguna Sepeda")
 st.pyplot(plt)
+
+st.markdown("""
+📌 **Insight:**
+- 👤 **Mayoritas pengguna adalah pengguna terdaftar**, yang mungkin berlangganan layanan penyewaan sepeda.
+- 🚲 Pengguna kasual lebih sedikit, tetapi bisa ditingkatkan dengan **promosi atau kemudahan akses** bagi mereka yang tidak berlangganan.
+""")
 
 # 5️⃣ Peminjaman Pengguna Kasual Berdasarkan Hari
 st.header("📆 Pengguna Kasual Berdasarkan Hari")
@@ -90,5 +123,12 @@ plt.xlabel("Hari dalam Seminggu")
 plt.ylabel("Rata-rata Peminjaman Kasual")
 plt.title("Peminjaman Pengguna Kasual per Hari")
 st.pyplot(plt)
+
+st.markdown("""
+📌 **Insight:**
+- 🚀 **Puncak peminjaman kasual terjadi di akhir pekan**, menunjukkan bahwa pengguna kasual lebih sering menggunakan sepeda untuk rekreasi.
+- 📅 **Hari kerja memiliki peminjaman lebih rendah**, kemungkinan karena sebagian besar orang lebih memilih transportasi lain untuk ke kantor.
+- 💡 **Strategi:** Promosi khusus di hari kerja bisa meningkatkan jumlah peminjaman kasual pada hari-hari biasa.
+""")
 
 st.success("🎉 Analisis selesai! Semoga bermanfaat dalam memahami tren peminjaman sepeda. 🚴‍♂️💨")
