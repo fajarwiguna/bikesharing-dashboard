@@ -40,23 +40,22 @@ mkdir bike_sharing_dashboard
 cd bike_sharing_dashboard
 python -m venv venv
 source venv/bin/activate  # (Gunakan `venv\Scripts\activate` di Windows)
-3️⃣ Instalasi Dependensi
+```
+### 3️⃣ Instalasi Dependensi
 Setelah lingkungan virtual aktif, instal pustaka yang dibutuhkan:
 
-sh
-Copy
-Edit
+```sh
 pip install -r requirements.txt
-🚀 Running the Dashboard
+```
+### 🚀 Running the Dashboard
 Untuk menjalankan dashboard, jalankan perintah berikut di terminal:
 
-sh
-Copy
-Edit
+```sh
 streamlit run dashboard/dashboard.py
 Aplikasi akan terbuka di browser secara otomatis di http://localhost:8501.
+```
 
-🌍 Deployment
+### 🌍 Deployment
 🔹 Hosting di Streamlit Cloud
 Buat repository GitHub dan unggah proyek Anda.
 Kunjungi Streamlit Cloud dan hubungkan ke repo GitHub.
@@ -67,9 +66,7 @@ Anda juga bisa menggunakan Render atau Hugging Face Spaces untuk hosting gratis.
 📌 Link Deploy: https://bikesharing-dashboard-fajar.streamlit.app/
 
 📂 Project Structure
-bash
-Copy
-Edit
+```bash
 bike_sharing_dashboard/
 │-- dashboard/
 │   │-- dashboard.py   # Skrip utama untuk dashboard
@@ -81,7 +78,9 @@ bike_sharing_dashboard/
 │-- README.md          # Dokumentasi proyek
 │-- requirements.txt   # Daftar pustaka yang diperlukan
 │-- url.txt            # Link ke dashboard Streamlit
-📊 Data Source
+```
+
+### 📊 Data Source
 Dataset yang digunakan berasal dari Bike Sharing Dataset, yang mencakup data peminjaman sepeda harian dan per jam.
 
 Kolom utama dalam dataset:
@@ -97,6 +96,9 @@ Proyek ini menggunakan MIT License. Anda bebas menggunakannya dan memodifikasiny
 
 🚀 Nikmati pengalaman eksplorasi data peminjaman sepeda! 📊🚴‍♂️
 
-bash
-Copy
-Edit
+
+
+
+
+
+
