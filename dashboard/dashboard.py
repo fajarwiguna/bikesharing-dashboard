@@ -91,4 +91,4 @@ plt.ylabel("Rata-rata Peminjaman Kasual")
 plt.title("Peminjaman Pengguna Kasual per Hari")
 st.pyplot(plt)
 
-st.success("✅ Dashboard Selesai!")
+st.success("🎉 Analisis selesai! Semoga bermanfaat dalam memahami tren peminjaman sepeda. 🚴‍♂️💨")
