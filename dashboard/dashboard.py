@@ -1,92 +1,94 @@
 import streamlit as st
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
+import seaborn as sns
 
-sns.set_theme(style="whitegrid")
+# Load dataset
+@st.cache_data
+def load_data():
+    df = pd.read_csv("dashboard/all_data.csv")
+    df["dteday"] = pd.to_datetime(df["dteday"])  # Konversi tanggal
+    return df
 
-all_df = pd.read_csv("dashboard/all_data.csv")
-bikes_per_day_df = pd.read_csv("data/day.csv")
-bikes_per_hour_df = pd.read_csv("data/hour.csv")
+df = load_data()
 
-bikes_per_day_df["dteday"] = pd.to_datetime(bikes_per_day_df["dteday"])
-bikes_per_hour_df["dteday"] = pd.to_datetime(bikes_per_hour_df["dteday"])
+# Sidebar
+st.sidebar.title("📊 Bike Sharing Dashboard")
+st.sidebar.subheader("Filter Data")
+selected_year = st.sidebar.radio("Pilih Tahun:", df["yr_day"].unique())
 
-min_date = bikes_per_day_df["dteday"].min().date()
-max_date = bikes_per_day_df["dteday"].max().date()
+# Filter data berdasarkan tahun yang dipilih
+df_filtered = df[df["yr_day"] == selected_year]
 
-with st.sidebar:
-    st.header("📊 Bike Sharing Dashboard")
-    st.image("https://img.freepik.com/premium-vector/young-man-rides-bicycle-flat-style-vector-illustration_787461-1042.jpg", width=150)
-    st.write("Analisis tren peminjaman sepeda berdasarkan musim, cuaca, dan tipe pengguna.")
+# Header
+st.title("🚴‍♂️ Analisis Peminjaman Sepeda")
 
-    start_date, end_date = st.date_input(
-        "Pilih Rentang Waktu",
-        min_value=min_date,
-        max_value=max_date,
-        value=[min_date, max_date]
-    )
+# 1️⃣ Statistik Umum
+st.header("📈 Statistik Umum")
+col1, col2, col3 = st.columns(3)
+col1.metric("Total Peminjaman", df_filtered["cnt_day"].sum())
+col2.metric("Peminjaman Harian Rata-rata", round(df_filtered["cnt_day"].mean(), 2))
+col3.metric("Peminjaman Maksimum dalam Sehari", df_filtered["cnt_day"].max())
 
-filtered_day_df = bikes_per_day_df[
-    (bikes_per_day_df["dteday"].dt.date >= start_date) &
-    (bikes_per_day_df["dteday"].dt.date <= end_date)
-]
+# 2️⃣ Tren Peminjaman Berdasarkan Bulan & Musim
+st.header("📅 Tren Peminjaman Sepeda")
+tab1, tab2 = st.tabs(["📆 Per Bulan", "🍂 Per Musim"])
 
-st.header("📆 Tren Peminjaman Sepeda Per Bulan & Musim")
+with tab1:
+    monthly_data = df_filtered.groupby("mnth_day")["cnt_day"].mean()
+    plt.figure(figsize=(10, 5))
+    sns.lineplot(x=monthly_data.index, y=monthly_data.values, marker="o")
+    plt.xticks(range(1, 13), [
+        "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"
+    ])
+    plt.xlabel("Bulan")
+    plt.ylabel("Jumlah Peminjaman")
+    plt.title("Rata-rata Peminjaman Sepeda per Bulan")
+    st.pyplot(plt)
 
-filtered_day_df["year_month"] = filtered_day_df["dteday"].dt.to_period("M")
-monthly_trend = filtered_day_df.groupby("year_month")["cnt"].sum()
+with tab2:
+    season_labels = {1: "Musim Semi", 2: "Musim Panas", 3: "Musim Gugur", 4: "Musim Dingin"}
+    df_filtered["season_label"] = df_filtered["season_day"].map(season_labels)
+    season_data = df_filtered.groupby("season_label")["cnt_day"].mean()
+    
+    plt.figure(figsize=(7, 5))
+    sns.barplot(x=season_data.index, y=season_data.values, palette="coolwarm")
+    plt.xlabel("Musim")
+    plt.ylabel("Jumlah Peminjaman")
+    plt.title("Rata-rata Peminjaman Sepeda per Musim")
+    st.pyplot(plt)
 
-fig, ax = plt.subplots(figsize=(12, 6))
-sns.lineplot(x=monthly_trend.index.astype(str), y=monthly_trend.values, marker="o", linewidth=2, color="royalblue", ax=ax)
-ax.set_title("Tren Jumlah Peminjaman Sepeda per Bulan", fontsize=14)
-ax.set_xlabel("Bulan", fontsize=12)
-ax.set_ylabel("Jumlah Peminjaman Sepeda", fontsize=12)
-plt.xticks(rotation=45)
-plt.grid(True, alpha=0.6)
-st.pyplot(fig)
+# 3️⃣ Pengaruh Cuaca
+st.header("🌦️ Pengaruh Cuaca terhadap Peminjaman")
+weather_data = df_filtered.groupby("weathersit_day")["cnt_day"].mean()
 
-st.markdown("💡 **Tren peminjaman sepeda meningkat di musim panas dan gugur, lalu menurun saat musim dingin.**")
+plt.figure(figsize=(7, 5))
+sns.barplot(x=weather_data.index, y=weather_data.values, palette="viridis")
+plt.xticks([0, 1, 2, 3], ["Cerah", "Mendung", "Gerimis", "Hujan Lebat"])
+plt.xlabel("Kondisi Cuaca")
+plt.ylabel("Rata-rata Peminjaman")
+plt.title("Dampak Cuaca terhadap Peminjaman Sepeda")
+st.pyplot(plt)
 
-st.header("🌦️ Pengaruh Kondisi Cuaca terhadap Peminjaman")
+# 4️⃣ Perbandingan Pengguna Kasual vs Terdaftar
+st.header("👥 Kasual vs Terdaftar")
+user_data = df_filtered[["casual_day", "registered_day"]].sum()
 
-fig, ax = plt.subplots(figsize=(12, 6))
-sns.scatterplot(x=filtered_day_df["temp"], y=filtered_day_df["cnt"], hue=filtered_day_df["weathersit"], palette="coolwarm", ax=ax)
-ax.set_title("Hubungan Suhu dan Peminjaman Sepeda", fontsize=14)
-ax.set_xlabel("Suhu (scaled)", fontsize=12)
-ax.set_ylabel("Jumlah Peminjaman", fontsize=12)
-st.pyplot(fig)
+plt.figure(figsize=(6, 6))
+plt.pie(user_data, labels=["Kasual", "Terdaftar"], autopct="%1.1f%%", colors=["lightblue", "orange"])
+plt.title("Proporsi Pengguna Sepeda")
+st.pyplot(plt)
 
-st.markdown("💡 **Semakin hangat suhu, semakin banyak peminjaman sepeda. Namun, kondisi cuaca buruk menurunkan peminjaman.**")
+# 5️⃣ Peminjaman Pengguna Kasual Berdasarkan Hari
+st.header("📆 Pengguna Kasual Berdasarkan Hari")
+day_labels = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"]
+casual_data = df_filtered.groupby("weekday_day")["casual_day"].mean()
 
-st.header("👤 Perbandingan Pengguna Kasual & Terdaftar")
+plt.figure(figsize=(8, 5))
+sns.barplot(x=day_labels, y=casual_data.values, palette="mako")
+plt.xlabel("Hari dalam Seminggu")
+plt.ylabel("Rata-rata Peminjaman Kasual")
+plt.title("Peminjaman Pengguna Kasual per Hari")
+st.pyplot(plt)
 
-casual_total = filtered_day_df["casual"].sum()
-registered_total = filtered_day_df["registered"].sum()
-
-fig, ax = plt.subplots(figsize=(6, 6))
-plt.pie([casual_total, registered_total], labels=["Kasual", "Terdaftar"], autopct="%1.1f%%", colors=["#FF9999", "#66B3FF"], startangle=140)
-plt.title("Proporsi Peminjaman: Kasual vs Terdaftar")
-st.pyplot(fig)
-
-st.markdown("💡 **Pengguna terdaftar jauh lebih dominan dibandingkan pengguna kasual.**")
-
-st.header("📅 Pola Pengguna Kasual di Akhir Pekan")
-
-weekday_usage = filtered_day_df.groupby("weekday")[["casual", "registered"]].sum()
-weekday_usage.index = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
-
-fig, ax = plt.subplots(figsize=(10, 5))
-weekday_usage["casual"].plot(kind="bar", color="#FF9999", label="Kasual", ax=ax)
-weekday_usage["registered"].plot(kind="bar", color="#66B3FF", label="Terdaftar", alpha=0.7, ax=ax)
-ax.set_title("Peminjaman Sepeda per Hari", fontsize=14)
-ax.set_xlabel("Hari", fontsize=12)
-ax.set_ylabel("Jumlah Peminjaman", fontsize=12)
-plt.xticks(rotation=0)
-plt.legend()
-st.pyplot(fig)
-
-st.markdown("💡 **Pengguna kasual lebih sering meminjam sepeda di akhir pekan, sedangkan pengguna terdaftar lebih merata sepanjang minggu.**")
-
-st.markdown("---")
-st.markdown("🚲 **Dashboard ini dikembangkan untuk memahami tren peminjaman sepeda dan memberikan wawasan berbasis data.**")
+st.success("✅ Dashboard Selesai!")
