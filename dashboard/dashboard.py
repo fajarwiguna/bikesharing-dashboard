@@ -79,22 +79,20 @@ with tab2:
     """)
 
 # 3️⃣ Pengaruh Cuaca
-st.header("🌦️ Pengaruh Cuaca terhadap Peminjaman")
-weather_data = df_filtered.groupby("weathersit_day")["cnt_day"].mean()
+st.header("🌦️ Korelasi Cuaca dan Jumlah Peminjaman")
 
-plt.figure(figsize=(7, 5))
-sns.barplot(x=weather_data.index, y=weather_data.values, palette="viridis")
-plt.xticks([0, 1, 2, 3], ["Cerah", "Mendung", "Gerimis", "Hujan Lebat"])
-plt.xlabel("Kondisi Cuaca")
-plt.ylabel("Rata-rata Peminjaman")
-plt.title("Dampak Cuaca terhadap Peminjaman Sepeda")
+weather_corr = df_filtered[['temp_day', 'hum_day', 'windspeed_day', 'cnt_day']].corr()
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(weather_corr, annot=True, cmap="coolwarm", fmt=".2f", linewidths=0.5)
+plt.title("Korelasi antara Cuaca dan Jumlah Peminjaman Sepeda")
 st.pyplot(plt)
 
 st.markdown("""
 📌 **Insight:**
-- ☀️ Cuaca cerah berkontribusi pada peminjaman tertinggi, menunjukkan preferensi orang untuk bersepeda saat cuaca mendukung.
-- 🌧️ Peminjaman menurun saat hujan lebat, menandakan **kebutuhan alternatif transportasi di kondisi ekstrem**.
-- 🚲 **Saran:** Penyedia layanan bisa memberikan **diskon saat cuaca mendung** untuk mendorong penggunaan yang lebih stabil.
+- 🌡️ **Suhu memiliki korelasi positif** dengan jumlah peminjaman (**semakin panas, semakin banyak yang meminjam**).
+- 💨 **Kecepatan angin & kelembaban memiliki korelasi negatif** (**cuaca berangin & lembab cenderung menurunkan peminjaman**).
+- 📊 **Saran:** Bisa dilakukan strategi pemasaran saat suhu optimal untuk meningkatkan peminjaman sepeda.
 """)
 
 # 4️⃣ Perbandingan Pengguna Kasual vs Terdaftar
