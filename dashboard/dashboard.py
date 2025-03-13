@@ -15,7 +15,9 @@ df = load_data()
 # Sidebar
 st.sidebar.title("📊 Bike Sharing Dashboard")
 st.sidebar.subheader("Filter Data")
-selected_year = st.sidebar.radio("Pilih Tahun:", df["yr_day"].unique())
+year_mapping = {0: "2011", 1: "2012"}
+selected_year = st.sidebar.radio("Pilih Tahun:", df["yr_day"].unique(), format_func=lambda x: year_mapping[x])
+
 
 # Filter data berdasarkan tahun yang dipilih
 df_filtered = df[df["yr_day"] == selected_year]
@@ -55,10 +57,12 @@ with tab1:
 
     st.markdown("""
     📌 **Insight:**
-    - 📈 Peminjaman meningkat pada bulan tertentu, bisa jadi karena **cuaca yang lebih baik** atau **liburan**.
-    - 🔻 Jika ada bulan dengan peminjaman rendah, bisa dianalisis lebih lanjut penyebabnya.
+    - 📈 **Tahun 2011:** Peminjaman **meningkat signifikan** dari **Maret hingga Juni**, sebelum mulai menurun.  
+    - 📊 **Tahun 2012:** Tren serupa, tetapi peningkatan **berlanjut hingga September**, menunjukkan permintaan yang lebih stabil.  
+    - 🚲 **Saran:** Karena tren peminjaman lebih tinggi di pertengahan & akhir tahun, layanan bisa **meningkatkan jumlah sepeda di bulan-bulan tersebut** untuk memaksimalkan keuntungan.
     """)
 
+    
 with tab2:
     season_labels = {1: "Musim Semi", 2: "Musim Panas", 3: "Musim Gugur", 4: "Musim Dingin"}
     df_filtered["season_label"] = df_filtered["season_day"].map(season_labels)
