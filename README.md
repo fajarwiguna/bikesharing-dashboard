@@ -37,9 +37,15 @@ Buat dan aktifkan lingkungan virtual untuk proyek ini:
 
 ```sh
 mkdir bike_sharing_dashboard
+```
+```sh
 cd bike_sharing_dashboard
+```
+```sh
 python -m venv venv
-source venv/bin/activate  # (Gunakan `venv\Scripts\activate` di Windows)
+```
+```sh
+source .venv\Scripts\activate
 ```
 ### 3️⃣ Instalasi Dependensi
 Setelah lingkungan virtual aktif, instal pustaka yang dibutuhkan:
@@ -52,8 +58,9 @@ Untuk menjalankan dashboard, jalankan perintah berikut di terminal:
 
 ```sh
 streamlit run dashboard/dashboard.py
-Aplikasi akan terbuka di browser secara otomatis di http://localhost:8501.
 ```
+Aplikasi akan terbuka di browser secara otomatis di http://localhost:8501.
+
 
 ### 🌍 Deployment
 🔹 Hosting di Streamlit Cloud
