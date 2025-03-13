@@ -95,6 +95,7 @@ season → Musim saat peminjaman dilakukan
 temp → Suhu rata-rata
 windspeed → Kecepatan angin
 cnt → Jumlah total peminjaman
+
 📜 License
 Proyek ini menggunakan MIT License. Anda bebas menggunakannya dan memodifikasinya sesuai kebutuhan.
 
