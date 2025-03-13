@@ -112,7 +112,7 @@ st.markdown("""
 
 # 5️⃣ Peminjaman Pengguna Kasual Berdasarkan Hari
 st.header("📆 Pengguna Kasual Berdasarkan Hari")
-day_labels = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"]
+day_labels = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
 casual_data = df_filtered.groupby("weekday_day")["casual_day"].mean()
 
 plt.figure(figsize=(8, 5))
