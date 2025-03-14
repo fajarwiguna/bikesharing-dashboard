@@ -16,11 +16,15 @@ df = load_data()
 st.sidebar.title("📊 Bike Sharing Dashboard")
 st.sidebar.subheader("Filter Data")
 year_mapping = {0: "2011", 1: "2012"}
-selected_year = st.sidebar.radio("Pilih Tahun:", df["yr_day"].unique(), format_func=lambda x: year_mapping[x])
+df["yr_day"] = df["yr_day"].map(year_mapping)
 
+year_options = ["All Years"] + sorted(df["yr_day"].unique().tolist())
+selected_year = st.sidebar.selectbox("Pilih Tahun:", year_options)
 
-# Filter data berdasarkan tahun yang dipilih
-df_filtered = df[df["yr_day"] == selected_year]
+if selected_year == "All Years":
+    df_filtered = df  # Menampilkan semua data
+else:
+    df_filtered = df[df["yr_day"] == selected_year]  # Filter berdasarkan tahun yang dipilih
 
 # Header
 st.title("🚴‍♂️ Analisis Peminjaman Sepeda")
@@ -52,6 +56,7 @@ with tab1:
     ])
     plt.xlabel("Bulan")
     plt.ylabel("Jumlah Peminjaman")
+    plt.ylim(0, 8000)  # Konsistensi batas sumbu Y
     plt.title("Rata-rata Peminjaman Sepeda per Bulan")
     st.pyplot(plt)
 
@@ -72,6 +77,7 @@ with tab2:
     sns.barplot(x=season_data.index, y=season_data.values, palette="coolwarm")
     plt.xlabel("Musim")
     plt.ylabel("Jumlah Peminjaman")
+    plt.ylim(0, 8000)  # Konsistensi batas sumbu Y
     plt.title("Rata-rata Peminjaman Sepeda per Musim")
     st.pyplot(plt)
 
@@ -104,7 +110,9 @@ st.header("👥 Kasual vs Terdaftar")
 user_data = df_filtered[["casual_day", "registered_day"]].sum()
 
 plt.figure(figsize=(6, 6))
-plt.pie(user_data, labels=["Kasual", "Terdaftar"], autopct="%1.1f%%", colors=["lightblue", "orange"])
+colors = ["#FFA07A", "#4682B4"]  # Warna lebih soft & enak dilihat
+plt.pie(user_data, labels=["Casual", "Registered"], autopct='%1.1f%%', colors=colors, startangle=140, explode=(0.05, 0), shadow=True)
+
 plt.title("Proporsi Pengguna Sepeda")
 st.pyplot(plt)
 
@@ -123,6 +131,7 @@ plt.figure(figsize=(8, 5))
 sns.barplot(x=day_labels, y=casual_data.values, palette="mako")
 plt.xlabel("Hari dalam Seminggu")
 plt.ylabel("Rata-rata Peminjaman Kasual")
+plt.ylim(0, 2000)  
 plt.title("Peminjaman Pengguna Kasual per Hari")
 st.pyplot(plt)
 
